@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9d45e68-686c-4540-8028-27e841c81173" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/python_ai_service/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python_ai_service/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/python_ai_service/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python_ai_service/.idea/python_ai_service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/python_ai_service/.idea/python_ai_service.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,9 +13,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2naSFu5RNBW5xGkblebGhrKUSKm" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -25,7 +26,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Brian Anashari/Desktop/MyDream/project/simple-chatbot",
+    "last_opened_file_path": "C:/Users/Brian Anashari/Desktop/MyDream/project/simple-chatbot/python_ai_service",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -33,8 +34,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-PY-241.15989.155" />
-        <option value="bundled-python-sdk-babbdf50b680-7c6932dee5e4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.15989.155" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23339.19" />
+        <option value="bundled-python-sdk-0029f7779945-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23339.19" />
       </set>
     </attachedChunks>
   </component>
@@ -47,6 +48,7 @@
       <option name="presentableId" value="Default" />
       <updated>1729209592787</updated>
       <workItem from="1729209593844" duration="64000" />
+      <workItem from="1729222232048" duration="14000" />
     </task>
     <servers />
   </component>

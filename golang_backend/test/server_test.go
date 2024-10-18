@@ -1,59 +1,34 @@
 package test
 
 import (
-	"bytes"
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
+	"golang_backend/app"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
-
-	"golang_backend/api" // Sesuaikan dengan path package asli
-
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 )
 
-func TestAskHandler(t *testing.T) {
-	// Setup Gin router dan API handler
-	router := gin.Default()
-	router.POST("/ask", api.AskHandler)
+func TestServer(t *testing.T) {
+	router := app.NewRouter()
+	requestBody := strings.NewReader(`{"question":"Gimana cuaca hari ini?"}`)
+	request := httptest.NewRequest(http.MethodPost, "https://localhost:3000/api/ask", requestBody)
+	recorder := httptest.NewRecorder()
+	request.Header.Add("Content-Type", "application/json")
 
-	// Mock pertanyaan dari Flutter
-	requestBody, _ := json.Marshal(map[string]string{
-		"question": "apa kabar?",
-	})
+	router.ServeHTTP(recorder, request)
 
-	// Membuat request HTTP POST menggunakan httptest
-	req, _ := http.NewRequest(http.MethodPost, "/ask", bytes.NewBuffer(requestBody))
-	req.Header.Set("Content-Type", "application/json")
-
-	// Membuat recorder untuk menangkap response dari handler
-	w := httptest.NewRecorder()
-
-	// Menjalankan router dengan request
-	router.ServeHTTP(w, req)
-
-	// Membaca response body
-	resBody, err := io.ReadAll(w.Body)
+	response := recorder.Result()
+	var responseBody map[string]interface{}
+	res, err := io.ReadAll(response.Body)
 	assert.Nil(t, err)
 
-	// Assert status code 200 (OK)
-	assert.Equal(t, http.StatusOK, w.Code)
-
-	// Pastikan response tidak kosong
-	assert.NotEmpty(t, resBody)
-
-	// Assert bahwa response berisi kunci "answer"
-	var response map[string]string
-	err = json.Unmarshal(resBody, &response)
+	err = json.Unmarshal(res, &responseBody)
 	assert.Nil(t, err)
 
-	// Pastikan response memiliki kunci "answer"
-	if _, exists := response["answer"]; !exists {
-		t.Fatalf("\nResponse tidak mengandung kunci 'answer'")
-	}
-
-	// (Opsional) Cetak response untuk debugging
-	t.Logf("Response: %v", response)
+	assert.Equal(t, float64(200), responseBody["code"])
+	assert.Equal(t, "OK", responseBody["status"])
+	assert.Equal(t, "Hari ini cerah.", responseBody["data"].(map[string]interface{})["answer"])
 }

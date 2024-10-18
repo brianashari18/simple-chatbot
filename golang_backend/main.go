@@ -1,17 +1,19 @@
 package main
 
 import (
-	"golang_backend/api"
-
-	"github.com/gin-gonic/gin"
+	"golang_backend/app"
+	"golang_backend/helper"
+	"net/http"
 )
 
 func main() {
-	r := gin.Default()
+	router := app.NewRouter()
 
-	// Tambahkan route untuk endpoint AI
-	r.POST("/ask", api.AskHandler)
+	server := http.Server{
+		Addr:    "localhost:3000",
+		Handler: router,
+	}
 
-	// Jalankan server pada port 8080
-	r.Run(":8080")
+	err := server.ListenAndServe()
+	helper.PanicErr(err)
 }

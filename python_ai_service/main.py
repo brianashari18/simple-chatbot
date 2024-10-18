@@ -1,9 +1,10 @@
+from datetime import datetime
+
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
 
-# Fungsi sederhana untuk menangani permintaan AI
 @app.route("/process_question", methods=["POST"])
 def process_question():
     data = request.get_json()
@@ -16,11 +17,12 @@ def process_question():
 
 
 def ai_model_function(question):
-    # Logika AI di sini
     if "cuaca" in question:
         return "Hari ini cerah."
-    elif "waktu" in question:
-        return "Waktunya sekarang jam 14:00."
+    elif "waktu" or "jam" in question:
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        return f"Waktunya sekarang jam {current_time} UTC+7"
     else:
         return "Maaf, saya tidak mengerti pertanyaan Anda."
 

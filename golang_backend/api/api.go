@@ -1,62 +1,51 @@
 package api
 
 import (
-	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"github.com/julienschmidt/httprouter"
+	"golang_backend/helper"
+	"golang_backend/models"
+	"io"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"strings"
 )
 
-// Handler untuk menerima pertanyaan dari Flutter dan meneruskannya ke Python AI
-func AskHandler(c *gin.Context) {
-	var request struct {
-		Question string `json:"question"`
+func AskHandler(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	request := models.QuestionRequest{}
+	helper.ReadFromRequest(r, &request)
+
+	questionResponse, err := callPythonAI(request)
+	helper.PanicErr(err)
+
+	response := models.Response{
+		Code:   200,
+		Status: "OK",
+		Data:   questionResponse,
 	}
 
-	if err := c.BindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
-	}
-
-	// Kirim pertanyaan ke API Python
-	aiResponse, err := callPythonAI(request.Question)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process question"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"answer": aiResponse})
+	helper.WriteToResponse(w, &response)
+	helper.PanicErr(err)
 }
 
-// Fungsi untuk mengirimkan request ke Python AI
-func callPythonAI(question string) (string, error) {
+func callPythonAI(question models.QuestionRequest) (models.QuestionResponse, error) {
 	aiUrl := "http://localhost:5000/process_question" // URL API Python
 
-	// Format JSON untuk request ke Python
-	jsonData, err := json.Marshal(map[string]string{"question": question})
-	if err != nil {
-		return "", err
-	}
+	bytes, err := json.Marshal(question)
+	helper.PanicErr(err)
 
-	// Kirim request POST ke Python API
-	response, err := http.Post(aiUrl, "application/json", bytes.NewBuffer(jsonData))
-	if err != nil {
-		return "", err
-	}
-	defer response.Body.Close()
+	response, err := http.Post(aiUrl, "application/json", strings.NewReader(string(bytes)))
+	helper.PanicErr(err)
+	defer func() {
+		err := response.Body.Close()
+		helper.PanicErr(err)
+	}()
 
-	// Baca response dari Python API
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return "", err
-	}
+	body, err := io.ReadAll(response.Body)
+	helper.PanicErr(err)
 
-	var result map[string]string
-	if err := json.Unmarshal(body, &result); err != nil {
-		return "", err
-	}
+	answerResponse := models.QuestionResponse{}
+	err = json.Unmarshal(body, &answerResponse)
+	helper.PanicErr(err)
 
-	return result["answer"], nil
+	return answerResponse, nil
 }

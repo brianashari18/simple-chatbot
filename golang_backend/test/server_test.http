@@ -1,0 +1,9 @@
+### GET request to example server
+POST http://localhost:3000/api/ask
+Content-Type: application/json
+
+{
+  "question": "Jam Berapa?"
+}
+
+###
